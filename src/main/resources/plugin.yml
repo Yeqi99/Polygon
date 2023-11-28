@@ -1,0 +1,4 @@
+name: Polygon
+version: '${project.version}'
+main: cn.originmc.plugins.polygon.Polygon
+api-version: '1.13'
