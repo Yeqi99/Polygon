@@ -10,11 +10,12 @@ public class Region {
     private String world;
     private double maxHeight;
     private double minHeight;
-    public Region(){
 
+    public Region() {
     }
 
-    public Region(double maxHeight, double minHeight) {
+    public Region(String world, double maxHeight, double minHeight) {
+        this.world = world;
         this.maxHeight = maxHeight;
         this.minHeight = minHeight;
     }
@@ -22,9 +23,10 @@ public class Region {
     public boolean isInWorld(Location location) {
         return location.getWorld().getName().equalsIgnoreCase(world);
     }
-    public boolean isInHeight(Location location){
-        double y=location.getY();
-        return y>=minHeight&&y<=maxHeight;
+
+    public boolean isInHeight(Location location) {
+        double y = location.getY();
+        return y >= minHeight && y <= maxHeight;
     }
 
     public boolean isInsideRegion(Location location) {
@@ -45,8 +47,9 @@ public class Region {
         }
         return count % 2 != 0;
     }
+
     public Node calculateCenter() {
-        if (nodes.size()<3) {
+        if (nodes.size() < 3) {
             return null;
         }
 
