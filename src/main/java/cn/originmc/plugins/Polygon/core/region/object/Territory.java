@@ -1,6 +1,6 @@
 package cn.originmc.plugins.Polygon.core.region.object;
 
-import java.util.Map;
+import cn.originmc.plugins.Polygon.core.region.object.flag.Flags;
 
 public class Territory extends Region{
     private String id;
