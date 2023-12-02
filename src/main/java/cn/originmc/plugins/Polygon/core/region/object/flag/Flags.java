@@ -1,11 +1,12 @@
 package cn.originmc.plugins.Polygon.core.region.object.flag;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 public interface Flags {
     String getId();
-    List<Flag> getFlags();
-    void setFlags(List<Flag> flags);
+    Collection<Flag> getFlags();
+    Set<String> getFlagNames();
     Flag getFlag(String flagId);
     Boolean hasFlag(String flagId);
     void addFlag(Flag flag);
