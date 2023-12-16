@@ -1,4 +1,4 @@
-package cn.originmc.plugins.Polygon.core.region.object.flag;
+package cn.originmc.plugins.Polygon.core.flag;
 
 import java.util.List;
 import java.util.Map;

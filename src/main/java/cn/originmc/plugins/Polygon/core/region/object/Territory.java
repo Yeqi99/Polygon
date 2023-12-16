@@ -1,16 +1,20 @@
 package cn.originmc.plugins.Polygon.core.region.object;
 
+import cn.originmc.plugins.Polygon.core.flag.Flags;
+import cn.originmc.plugins.Polygon.core.flag.FlagsMaster;
+import cn.originmc.plugins.Polygon.core.player.manager.TerritoryMemberManager;
 import cn.originmc.plugins.Polygon.core.player.object.RegionMember;
-import cn.originmc.plugins.Polygon.core.region.object.flag.Flags;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Territory extends Region implements PlayerRegion,MemberRegion {
+public class Territory extends Region implements PlayerRegion, MemberRegion, FlagsMaster {
     private String id;
     private String display;
     private Map<String, Flags> flagsMap = new ConcurrentHashMap<>();
-    private Map<String, RegionMember> regionMemberMap=new ConcurrentHashMap<>();
+    private Map<String, RegionMember> regionMemberMap = new ConcurrentHashMap<>();
+    private final TerritoryMemberManager territoryMemberManager = new TerritoryMemberManager();
 
     public Territory(String id, String display, String world, double maxHeight, double minHeight) {
         super(world, maxHeight, minHeight);
@@ -54,7 +58,7 @@ public class Territory extends Region implements PlayerRegion,MemberRegion {
         flagsMap.remove(flagsSpace);
     }
 
-
+    @Override
     public void setDisplay(String display) {
         this.display = display;
     }
@@ -74,7 +78,7 @@ public class Territory extends Region implements PlayerRegion,MemberRegion {
 
     @Override
     public void addMember(RegionMember regionMember) {
-        regionMemberMap.put(regionMember.getId(),regionMember);
+        regionMemberMap.put(regionMember.getId(), regionMember);
     }
 
     @Override
@@ -98,5 +102,9 @@ public class Territory extends Region implements PlayerRegion,MemberRegion {
 
     public void setRegionMemberMap(Map<String, RegionMember> regionMemberMap) {
         this.regionMemberMap = regionMemberMap;
+    }
+
+    public TerritoryMemberManager getTerritoryMemberManager() {
+        return territoryMemberManager;
     }
 }
