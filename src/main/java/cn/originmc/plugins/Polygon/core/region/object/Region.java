@@ -1,6 +1,10 @@
 package cn.originmc.plugins.Polygon.core.region.object;
 
+import cn.originmc.plugins.Polygon.core.building.object.Building;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +51,7 @@ public class Region {
         }
         return count % 2 != 0;
     }
+
 
     public Node calculateCenter() {
         if (nodes.size() < 3) {
@@ -103,5 +108,58 @@ public class Region {
 
     public void setWorld(String world) {
         this.world = world;
+    }
+
+    public double getMinX() {
+        return nodes.stream().mapToDouble(Node::getX).min().orElse(Double.NaN);
+    }
+
+    public double getMaxX() {
+        return nodes.stream().mapToDouble(Node::getX).max().orElse(Double.NaN);
+    }
+
+    public double getMinZ() {
+        return nodes.stream().mapToDouble(Node::getZ).min().orElse(Double.NaN);
+    }
+
+    public double getMaxZ() {
+        return nodes.stream().mapToDouble(Node::getZ).max().orElse(Double.NaN);
+    }
+
+
+    public Building getBuilding() {
+        if (nodes.isEmpty()) {
+            return null;
+        }
+
+        Node centerNode = calculateCenter();
+        Vector centerVector = new Vector(centerNode.getX(), 0, centerNode.getZ());
+
+        Building building = new Building(centerVector);
+
+        // 处理节点相对坐标
+        for (Node node : nodes) {
+            Vector relativePosition = new Vector(node.getX() - centerNode.getX(), 0, node.getZ() - centerNode.getZ());
+            building.getRelativeNodes().add(relativePosition);
+        }
+        double minX = getMinX();
+        double maxX = getMaxX();
+        double minZ = getMinZ();
+        double maxZ = getMaxZ();
+        // 遍历区域内的所有方块
+        for (int x = (int) minX; x <= maxX; x++) {
+            for (int y = (int) minHeight; y <= maxHeight; y++) {
+                for (int z = (int) minZ; z <= maxZ; z++) {
+                    Location blockLocation = new Location(Bukkit.getWorld(world), x, y, z);
+                    if (isInsideRegion(blockLocation)) {
+                        Vector relativePosition = blockLocation.toVector().subtract(centerVector);
+                        Material material = blockLocation.getBlock().getType();
+                        building.addBlockData(relativePosition, material);
+                    }
+                }
+            }
+        }
+
+        return building;
     }
 }
