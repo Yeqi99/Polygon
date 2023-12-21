@@ -31,7 +31,7 @@ public class PolygonCommand implements CommandExecutor {
                 return true;
             }
             Player player = (Player) commandSender;
-            
+            //TODO
             Territory territory=new Territory(args[1],player,);
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e领地创建成功");
             return true;
