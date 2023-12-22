@@ -1,6 +1,7 @@
 package cn.originmc.plugins.polygon.core.building.object;
 
 import cn.originmc.plugins.polygon.Polygon;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -57,7 +58,9 @@ public class Building {
         for (BlockData blockData : blockDataList) {
             Vector relativePosition = blockData.getRelativePosition();
             Material material = blockData.getMaterial();
-
+            if (material==Material.AIR){
+                continue;
+            }
             // 计算实际的世界坐标
             Vector worldPosition = centerVector.clone().add(relativePosition);
             Location blockLocation = new Location(centerLocation.getWorld(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
@@ -67,29 +70,38 @@ public class Building {
         }
     }
 
+
     public void restoreBuildingAsync(Location centerLocation, long delay) {
         new BukkitRunnable() {
             final Iterator<BlockData> iterator = blockDataList.iterator();
 
             @Override
             public void run() {
-                if (iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     BlockData blockData = iterator.next();
-                    Vector relativePosition = blockData.getRelativePosition();
                     Material material = blockData.getMaterial();
 
-                    // 计算实际的世界坐标
+                    if (material == Material.AIR) {
+                        continue; // 如果是空气，跳过当前循环，立即处理下一个方块
+                    }
+
+                    Vector relativePosition = blockData.getRelativePosition();
                     Vector worldPosition = centerLocation.toVector().clone().add(relativePosition);
                     Location blockLocation = new Location(centerLocation.getWorld(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 
-                    // 在 Minecraft 世界中异步放置这个方块
-                    blockLocation.getBlock().setType(material);
-                } else {
-                    // 如果所有方块都已放置，取消这个任务
+                    // 在主线程中放置方块
+                    Bukkit.getScheduler().runTask(Polygon.getInstance(), () -> blockLocation.getBlock().setType(material));
+
+                    // 在放置非空气方块后，等待下一次迭代
+                    break;
+                }
+
+                if (!iterator.hasNext()) {
+                    // 如果所有方块都已处理，取消这个任务
                     this.cancel();
                 }
             }
-        }.runTaskTimerAsynchronously(Polygon.getInstance(), 0L, delay); // 把延迟转换成游戏刻，因为 Minecraft 每秒运行 20 刻
+        }.runTaskTimerAsynchronously(Polygon.getInstance(), 0L, delay); // 时间间隔转换为游戏刻
     }
 
     // BlockData 类来存储每个方块的信息
