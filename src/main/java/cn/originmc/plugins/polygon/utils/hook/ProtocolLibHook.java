@@ -48,43 +48,4 @@ public class ProtocolLibHook {
 
         protocolManager.sendServerPacket(player, blockChangePacket);
     }
-
-    public static void sendDisplayEntity(Location loc, Player player, int entityId, String customName, boolean isVisible) {
-        if (!status) {
-            return;
-        }
-        ProtocolManager protocolManager = pm;
-
-        // 创建 PacketContainer 来发送实体信息
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
-
-        // 基础数据设置
-        packet.getIntegers().write(0, entityId);
-        packet.getUUIDs().write(0, UUID.randomUUID());
-        packet.getEntityTypeModifier().write(0, EntityType.TEXT_DISPLAY);
-        packet.getDoubles().write(0, loc.getX());
-        packet.getDoubles().write(1, loc.getY());
-        packet.getDoubles().write(2, loc.getZ());
-        Polygon.getSender().sendToAllPlayer(packet.toString());
-
-        Entity entity = player.getWorld().spawnEntity(loc,EntityType.TEXT_DISPLAY);
-        TextDisplay textDisplay = (TextDisplay) entity;
-        textDisplay.setText("你好哦~");
-        entity.remove();
-        WrappedDataWatcher watcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
-
-        packet.getDataWatcherModifier().write(0,watcher);
-        pm.sendServerPacket(player, packet);
-    }
-
-    public static WrappedChatComponent createChatComponent(String text) {
-        // 使用 BungeeCord 的 TextComponent，您也可以选择其他方式来构建文本
-        TextComponent textComponent = new TextComponent(text);
-
-        // 将 TextComponent 转换为 JSON 格式的字符串
-        String json = TextComponent.toLegacyText(textComponent);
-
-        // 创建并返回 WrappedChatComponent
-        return WrappedChatComponent.fromJson(json);
-    }
 }

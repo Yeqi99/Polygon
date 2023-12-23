@@ -6,7 +6,7 @@ import cn.originmc.plugins.polygon.core.building.object.Building;
 import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
 import cn.originmc.plugins.polygon.core.region.object.Node;
 import cn.originmc.plugins.polygon.core.region.object.Territory;
-import cn.originmc.plugins.polygon.utils.hook.ProtocolLibHook;
+import cn.originmc.plugins.polygon.data.yaml.config.LangData;
 import cn.originmc.plugins.polygon.utils.region.NodeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,10 +24,14 @@ public class PolygonCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("reload")) {
             Polygon.loadOrReload();
-            Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e重载成功");
+            Polygon.getSender().sendToSender(commandSender, LangData.getPrefix()+LangData.getServerText("reload", "重载成功"));
             return true;
         } else if (args[0].equalsIgnoreCase("help")) {
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon reload 重载插件");
+            Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon create <领地名字> <领地显示名字> 创建领地");
+            Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon info 查看领地信息");
+            Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon building <建筑名字> <领地名字> 保存建筑");
+            Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon place <建筑名字> 放置建筑");
             return true;
         } else if (args[0].equalsIgnoreCase("create")) {
             if (args.length <= 2) {
@@ -50,28 +54,26 @@ public class PolygonCommand implements CommandExecutor {
             Polygon.getTerritoryManager().addTerritory(territory);
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e领地创建成功");
             return true;
-        } else if (args[0].equalsIgnoreCase("test")) {
-            Player player = (Player) commandSender;
-            ProtocolLibHook.sendDisplayEntity(player.getLocation(),player,0,"牛逼",true);
-//            Polygon.getSender().sendToSender(commandSender, "调试信息");
-//            Polygon.getSender().sendToSender(commandSender, "领地数量:" + Polygon.getTerritoryManager().territoryMap.size());
-//            for (Map.Entry<String, Territory> stringTerritoryEntry : Polygon.getTerritoryManager().territoryMap.entrySet()) {
-//                Polygon.getSender().sendToSender(commandSender, "领地名字:" + stringTerritoryEntry.getValue().getDisplay());
-//                Polygon.getSender().sendToSender(commandSender, "领地ID:" + stringTerritoryEntry.getValue().getId());
-//                Polygon.getSender().sendToSender(commandSender, "领地世界:" + stringTerritoryEntry.getValue().getWorld());
-//                Polygon.getSender().sendToSender(commandSender, "领地最大高度:" + stringTerritoryEntry.getValue().getMaxHeight());
-//                Polygon.getSender().sendToSender(commandSender, "领地最小高度:" + stringTerritoryEntry.getValue().getMinHeight());
-//                Polygon.getSender().sendToSender(commandSender, "领地成员数量:" + stringTerritoryEntry.getValue().getTerritoryMemberManager().territoryMap.size());
-//                for (Map.Entry<String, TerritoryMember> stringTerritoryMemberEntry : stringTerritoryEntry.getValue().getTerritoryMemberManager().territoryMap.entrySet()) {
-//                    Polygon.getSender().sendToSender(commandSender, "领地成员名字:" + stringTerritoryMemberEntry.getValue().getPlayer().getName());
-//                    Polygon.getSender().sendToSender(commandSender, "领地成员ID:" + stringTerritoryMemberEntry.getValue().getId());
-//                }
-//                Polygon.getSender().sendToSender(commandSender, "领地节点数量:" + stringTerritoryEntry.getValue().getNodes().size());
-//                for (int i = 0; i < stringTerritoryEntry.getValue().getNodes().size(); i++) {
-//                    Polygon.getSender().sendToSender(commandSender, "领地节点" + i + "X:" + stringTerritoryEntry.getValue().getNodes().get(i).getX());
-//                    Polygon.getSender().sendToSender(commandSender, "领地节点" + i + "Z:" + stringTerritoryEntry.getValue().getNodes().get(i).getZ());
-//                }
-//            }
+        } else if (args[0].equalsIgnoreCase("info")) {
+            Polygon.getSender().sendToSender(commandSender, "调试信息");
+            Polygon.getSender().sendToSender(commandSender, "领地数量:" + Polygon.getTerritoryManager().territoryMap.size());
+            for (Map.Entry<String, Territory> stringTerritoryEntry : Polygon.getTerritoryManager().territoryMap.entrySet()) {
+                Polygon.getSender().sendToSender(commandSender, "领地名字:" + stringTerritoryEntry.getValue().getDisplay());
+                Polygon.getSender().sendToSender(commandSender, "领地ID:" + stringTerritoryEntry.getValue().getId());
+                Polygon.getSender().sendToSender(commandSender, "领地世界:" + stringTerritoryEntry.getValue().getWorld());
+                Polygon.getSender().sendToSender(commandSender, "领地最大高度:" + stringTerritoryEntry.getValue().getMaxHeight());
+                Polygon.getSender().sendToSender(commandSender, "领地最小高度:" + stringTerritoryEntry.getValue().getMinHeight());
+                Polygon.getSender().sendToSender(commandSender, "领地成员数量:" + stringTerritoryEntry.getValue().getTerritoryMemberManager().territoryMap.size());
+                for (Map.Entry<String, TerritoryMember> stringTerritoryMemberEntry : stringTerritoryEntry.getValue().getTerritoryMemberManager().territoryMap.entrySet()) {
+                    Polygon.getSender().sendToSender(commandSender, "领地成员名字:" + stringTerritoryMemberEntry.getValue().getPlayer().getName());
+                    Polygon.getSender().sendToSender(commandSender, "领地成员ID:" + stringTerritoryMemberEntry.getValue().getId());
+                }
+                Polygon.getSender().sendToSender(commandSender, "领地节点数量:" + stringTerritoryEntry.getValue().getNodes().size());
+                for (int i = 0; i < stringTerritoryEntry.getValue().getNodes().size(); i++) {
+                    Polygon.getSender().sendToSender(commandSender, "领地节点" + i + "X:" + stringTerritoryEntry.getValue().getNodes().get(i).getX());
+                    Polygon.getSender().sendToSender(commandSender, "领地节点" + i + "Z:" + stringTerritoryEntry.getValue().getNodes().get(i).getZ());
+                }
+            }
         } else if (args[0].equalsIgnoreCase("building")) {
             Territory territory = Polygon.getTerritoryManager().getTerritory(args[1]);
 
@@ -81,7 +83,7 @@ public class PolygonCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             Building building = Polygon.getBuildingManager().getBuilding(args[1]);
             if (building != null) {
-                building.restoreBuildingAsync(player.getLocation(), 1);
+                building.restoreBuildingAsync(player.getLocation(), Polygon.getInstance().getConfig().getInt("place-delay", 5));
                 Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e建筑放置成功");
             } else {
                 Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e没有这个建筑");
