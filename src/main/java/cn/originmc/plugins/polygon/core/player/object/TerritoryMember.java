@@ -2,6 +2,7 @@ package cn.originmc.plugins.polygon.core.player.object;
 
 import cn.originmc.plugins.polygon.core.flag.Flags;
 import cn.originmc.plugins.polygon.core.flag.FlagsMaster;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -15,6 +16,11 @@ public class TerritoryMember implements RegionMember, FlagsMaster {
     public TerritoryMember(String id, Player player) {
         this.id = id;
         this.player = player;
+    }
+
+    public TerritoryMember(String id) {
+        this.id = id;
+        this.player = Bukkit.getPlayer(id);
     }
 
     @Override

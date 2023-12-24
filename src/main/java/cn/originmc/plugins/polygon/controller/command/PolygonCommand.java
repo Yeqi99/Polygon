@@ -7,6 +7,7 @@ import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
 import cn.originmc.plugins.polygon.core.region.object.Node;
 import cn.originmc.plugins.polygon.core.region.object.Territory;
 import cn.originmc.plugins.polygon.data.yaml.config.LangData;
+import cn.originmc.plugins.polygon.utils.hook.ProtocolLibHook;
 import cn.originmc.plugins.polygon.utils.region.NodeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class PolygonCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("reload")) {
             Polygon.loadOrReload();
-            Polygon.getSender().sendToSender(commandSender, LangData.getPrefix()+LangData.getServerText("reload", "重载成功"));
+            Polygon.getSender().sendToSender(commandSender, LangData.getPrefix() + LangData.getServerText("reload", "重载成功"));
             return true;
         } else if (args[0].equalsIgnoreCase("help")) {
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e/polygon reload 重载插件");
@@ -88,6 +89,9 @@ public class PolygonCommand implements CommandExecutor {
             } else {
                 Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e没有这个建筑");
             }
+        } else if (args[0].equalsIgnoreCase("t")) {
+            Player player = (Player) commandSender;
+            ProtocolLibHook.sendTextDisplay(player, player.getLocation(), 11112121, args[1]);
         }
 
         return true;

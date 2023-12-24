@@ -1,0 +1,35 @@
+display: "默认领地"
+owner: YeqiYQ
+flags:
+  visitor:
+    place:
+      enable: false
+    break:
+      enable: false
+    use:
+      enable: true
+  member:
+    place:
+      enable: true
+    break:
+      enable: true
+    use:
+      enable: true
+  admin:
+    add-member:
+      enable: true
+    remove-member:
+      enable: true
+    place:
+      enable: true
+    break:
+      enable: true
+    use:
+      enable: true
+members:
+  YeqiYQ:
+    flags:
+      default:
+        group: admin
+      region1:
+        group: member
