@@ -8,7 +8,7 @@ public interface FlagsMaster {
     public Flags getFlags(String flagsSpace);
 
 
-    public void addFlags(String flagsSpace, Flags flags);
+    public void addFlags( Flags flags);
 
     public void removeFlags(String flagsSpace);
 }

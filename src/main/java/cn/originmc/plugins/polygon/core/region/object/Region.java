@@ -112,6 +112,9 @@ public class Region {
     private boolean isOnBoundary(double x, double z) {
         double epsilon = 0.0001; // 容差值
         int numNodes = nodes.size();
+        if (nodes.size()<3){
+            return false;
+        }
         for (int i = 0; i < numNodes; i++) {
             Node node1 = nodes.get(i);
             Node node2 = nodes.get((i + 1) % numNodes);

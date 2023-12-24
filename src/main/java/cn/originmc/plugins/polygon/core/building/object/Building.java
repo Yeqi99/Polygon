@@ -4,14 +4,14 @@ import cn.originmc.plugins.polygon.Polygon;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-public class Building {
+public class Building implements ConfigurationSerializable {
     private Vector center;
     private List<Vector> relativeNodes;
     private List<BlockData> blockDataList;
@@ -104,8 +104,25 @@ public class Building {
         }.runTaskTimerAsynchronously(Polygon.getInstance(), 0L, delay); // 时间间隔转换为游戏刻
     }
 
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        Map<String,Object> result=new HashMap<>();
+        result.put("center",center);
+        result.put("relativeNodes",relativeNodes);
+        result.put("blockDataList",blockDataList);
+        return result;
+    }
+    public static Building deserialize(Map<String, Object> map){
+        Vector center=(Vector) map.get("center");
+        List<Vector> relativeNodes=(List<Vector>) map.get("relativeNodes");
+        List<BlockData> blockDataList=(List<BlockData>) map.get("blockDataList");
+        Building building=new Building(center);
+        building.setRelativeNodes(relativeNodes);
+        building.setBlockDataList(blockDataList);
+        return building;
+    }
     // BlockData 类来存储每个方块的信息
-    public static class BlockData {
+    public static class BlockData implements ConfigurationSerializable{
         private Vector relativePosition;
         private Material material;
 
@@ -128,6 +145,19 @@ public class Building {
 
         public void setMaterial(Material material) {
             this.material = material;
+        }
+
+        @Override
+        public @NotNull Map<String, Object> serialize() {
+            Map<String,Object> result=new HashMap<>();
+            result.put("relativePosition",relativePosition);
+            result.put("material",material.name());
+            return result;
+        }
+        public static BlockData deserialize(Map<String, Object> map){
+            Vector relativePosition=(Vector) map.get("relativePosition");
+            Material material=Material.valueOf((String) map.get("material"));
+            return new BlockData(relativePosition,material);
         }
     }
 }

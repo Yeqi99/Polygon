@@ -49,11 +49,12 @@ public class PolygonCommand implements CommandExecutor {
             String worldName = player.getWorld().getName();
             List<Node> nodes = PolygonSelectionListener.selectionMap.get(player);
             Territory territory = new Territory(id, displayName, worldName, NodeUtil.getMaxHeight(nodes), NodeUtil.getMinHeight(nodes));
-            territory.addMember(new TerritoryMember(player.getName(), player));
+            territory.addMember(new TerritoryMember(player.getName()));
 
             territory.addNodes(PolygonSelectionListener.selectionMap.get(player));
             Polygon.getTerritoryManager().addTerritory(territory);
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e领地创建成功");
+            Polygon.getTerritoryManager().saveTerritoryToYaml();
             return true;
         } else if (args[0].equalsIgnoreCase("info")) {
             Polygon.getSender().sendToSender(commandSender, "调试信息");
@@ -80,6 +81,7 @@ public class PolygonCommand implements CommandExecutor {
 
             Polygon.getBuildingManager().addBuilding(args[2], territory.getBuilding());
             Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e建筑保存成功");
+            Polygon.getBuildingManager().saveTerritoryToYaml();
         } else if (args[0].equalsIgnoreCase("place")) {
             Player player = (Player) commandSender;
             Building building = Polygon.getBuildingManager().getBuilding(args[1]);
@@ -89,10 +91,7 @@ public class PolygonCommand implements CommandExecutor {
             } else {
                 Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e没有这个建筑");
             }
-        } else if (args[0].equalsIgnoreCase("t")) {
-            Player player = (Player) commandSender;
-            ProtocolLibHook.sendTextDisplay(player, player.getLocation(), 11112121, args[1]);
-        }
+        }   
 
         return true;
     }

@@ -1,6 +1,7 @@
 package cn.originmc.plugins.polygon.core.building.manager;
 
 import cn.originmc.plugins.polygon.core.building.object.Building;
+import cn.originmc.plugins.polygon.data.yaml.core.BuildingData;
 
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,10 @@ public class BuildingManager {
     public BuildingManager() {
 
     }
-
+    public void setBuildingMap(Map<String, Building> buildingMap) {
+        this.buildingMap.clear();
+        this.buildingMap.putAll(buildingMap);
+    }
     // 添加建筑到管理器
     public void addBuilding(String name, Building building) {
         buildingMap.put(name, building);
@@ -37,6 +41,13 @@ public class BuildingManager {
     public Set<String> getAllBuildingNames() {
         return buildingMap.keySet();
     }
-
+    public void loadBuildingFromYaml(){
+        setBuildingMap(BuildingData.getBuildingMap());
+    }
+    public void saveTerritoryToYaml(){
+        for (Map.Entry<String, Building> entry : buildingMap.entrySet()) {
+            BuildingData.save(entry.getKey(),entry.getValue());
+        }
+    }
 
 }

@@ -10,8 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
-import static cn.originmc.plugins.polygon.utils.text.Color.toColor;
-
 
 public class Sender {
     private static JavaPlugin plugin;

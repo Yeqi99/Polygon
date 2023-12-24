@@ -24,7 +24,7 @@ public class PolygonTabCompleter  implements TabCompleter {
             switch (args[0].toLowerCase()) {
                 case "create":
                     // 为 "create" 提供领地名字的建议，这里需要根据实际情况填充或获取数据
-                    return Collections.singletonList("<领地名字>");
+                    return Collections.singletonList("<领地ID>");
                 case "building":
                     // 为 "building" 提供建筑名字的建议，这里需要根据实际情况填充或获取数据
                     return new ArrayList<>(Polygon.getTerritoryManager().territoryMap.keySet());

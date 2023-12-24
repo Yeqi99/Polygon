@@ -1,6 +1,7 @@
 package cn.originmc.plugins.polygon.core.region.manager;
 
 import cn.originmc.plugins.polygon.core.region.object.Territory;
+import cn.originmc.plugins.polygon.data.yaml.core.TerritoryData;
 import org.bukkit.Location;
 
 import java.util.Map;
@@ -44,5 +45,15 @@ public class TerritoryManager {
             }
         }
         return null;
+    }
+    public void loadTerritoryFromYaml(){
+        for (Territory territory : TerritoryData.getTerritoryList()) {
+            territoryMap.put(territory.getId(),territory);
+        }
+    }
+    public void saveTerritoryToYaml(){
+        for (Territory territory : territoryMap.values()) {
+            TerritoryData.save(territory);
+        }
     }
 }

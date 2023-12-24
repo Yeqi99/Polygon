@@ -1,6 +1,9 @@
 package cn.originmc.plugins.polygon.core.flag;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
+import java.util.Map;
 
 public interface Flag {
     String getId();
@@ -9,4 +12,5 @@ public interface Flag {
     void removeValue(String key);
     Boolean hasValue(String key);
     List<String> getValueKeys();
+    @NotNull Map<String, Object> serialize();
 }

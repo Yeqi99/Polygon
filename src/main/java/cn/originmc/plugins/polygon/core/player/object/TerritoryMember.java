@@ -3,24 +3,20 @@ package cn.originmc.plugins.polygon.core.player.object;
 import cn.originmc.plugins.polygon.core.flag.Flags;
 import cn.originmc.plugins.polygon.core.flag.FlagsMaster;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TerritoryMember implements RegionMember, FlagsMaster {
+public class TerritoryMember implements RegionMember, FlagsMaster,ConfigurationSerializable {
     private final String id;
-    private final Player player;
     private Map<String, Flags> flagsMap = new ConcurrentHashMap<>();
-
-    public TerritoryMember(String id, Player player) {
-        this.id = id;
-        this.player = player;
-    }
 
     public TerritoryMember(String id) {
         this.id = id;
-        this.player = Bukkit.getPlayer(id);
     }
 
     @Override
@@ -34,8 +30,8 @@ public class TerritoryMember implements RegionMember, FlagsMaster {
     }
 
     @Override
-    public void addFlags(String flagsSpace, Flags flags) {
-        flagsMap.put(flagsSpace, flags);
+    public void addFlags(Flags flags) {
+        flagsMap.put(flags.getId(), flags);
     }
 
     @Override
@@ -50,7 +46,7 @@ public class TerritoryMember implements RegionMember, FlagsMaster {
 
     @Override
     public Player getPlayer() {
-        return this.player;
+        return Bukkit.getPlayer(this.id);
     }
 
     public Map<String, Flags> getFlagsMap() {
@@ -58,6 +54,22 @@ public class TerritoryMember implements RegionMember, FlagsMaster {
     }
 
     public void setFlagsMap(Map<String, Flags> flagsMap) {
-        this.flagsMap = flagsMap;
+        this.flagsMap.clear();
+        this.flagsMap.putAll(flagsMap);
+    }
+
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("id",this.id);
+        result.put("flagsMap",flagsMap);
+        return result;
+    }
+
+    public static TerritoryMember deserialize(Map<String, Object> map) {
+        String id =(String) map.get("id");
+        TerritoryMember territoryMember=new TerritoryMember(id);
+        territoryMember.setFlagsMap((Map<String, Flags>) map.get("flagsMap"));
+        return territoryMember;
     }
 }
