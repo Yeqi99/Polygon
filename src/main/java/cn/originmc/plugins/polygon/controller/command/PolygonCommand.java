@@ -1,25 +1,75 @@
 package cn.originmc.plugins.polygon.controller.command;
 
 import cn.originmc.plugins.polygon.Polygon;
+import cn.originmc.plugins.polygon.controller.command.command.SubCommand;
+import cn.originmc.plugins.polygon.controller.command.command.impl.*;
 import cn.originmc.plugins.polygon.controller.listener.PolygonSelectionListener;
 import cn.originmc.plugins.polygon.core.building.object.Building;
 import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
 import cn.originmc.plugins.polygon.core.region.object.Node;
 import cn.originmc.plugins.polygon.core.region.object.Territory;
 import cn.originmc.plugins.polygon.data.yaml.config.LangData;
-import cn.originmc.plugins.polygon.utils.hook.ProtocolLibHook;
 import cn.originmc.plugins.polygon.utils.region.NodeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class PolygonCommand implements CommandExecutor {
+    public PolygonCommand() {
+        registerCommand(new HelpCommand());
+        registerCommand(new ReloadCommand());
+        registerCommand(new CreateCommand());
+        registerCommand(new RemoveCommand());
+        registerCommand(new MemberAddCommand());
+    }
+
+    List<SubCommand> commands = new ArrayList<>();
+
+    public void registerCommand(SubCommand subCommand) {
+        commands.add(subCommand);
+    }
+
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] args) {
+        for (SubCommand subCommand : commands) {
+            int len = subCommand.getPrefix().size() + subCommand.getSize();
+            if (len > args.length) {
+                continue;
+            }
+            boolean flag = true;
+            for (int i = 0; i < subCommand.getPrefix().size(); i++) {
+                String prefix = subCommand.getPrefix().get(i);
+                if (!args[i].equalsIgnoreCase(prefix)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                if (!commandSender.hasPermission(subCommand.getPermission()) && !commandSender.isOp()) {
+                    Polygon.getSender().sendToSender(commandSender, LangData.getPrefix() + LangData.getServerText("no-permission", "你没有权限"));
+                    return true;
+                }
+                if (subCommand.needPlayer()) {
+                    if (commandSender instanceof Player) {
+                        subCommand.execute(args, commandSender);
+                    } else {
+                        Polygon.getSender().sendToSender(commandSender, LangData.getPrefix() + LangData.getServerText("no-player", "你必须是一个玩家"));
+                    }
+                } else {
+                    subCommand.execute(args, commandSender);
+                }
+                return true;
+            }
+        }
+        return true;
+
+
         if (args.length == 0) {
             return true;
         }
@@ -91,7 +141,7 @@ public class PolygonCommand implements CommandExecutor {
             } else {
                 Polygon.getSender().sendToSender(commandSender, "§a[§bPolygon§a] §e没有这个建筑");
             }
-        }   
+        }
 
         return true;
     }

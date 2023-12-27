@@ -33,7 +33,4 @@ public class TerritoryData {
         }
         return territories;
     }
-
-
-
 }
