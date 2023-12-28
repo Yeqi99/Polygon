@@ -87,6 +87,7 @@ public class Region {
         }
         return count % 2 != 0;
     }
+
     private boolean isPointOnLineSegment(double px, double pz, double x1, double z1, double x2, double z2, double epsilon) {
         double lineLengthSquared = (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1);
 
@@ -109,10 +110,11 @@ public class Region {
         double distanceSquared = (px - projX) * (px - projX) + (pz - projZ) * (pz - projZ);
         return distanceSquared < epsilon * epsilon;
     }
+
     private boolean isOnBoundary(double x, double z) {
         double epsilon = 0.0001; // 容差值
         int numNodes = nodes.size();
-        if (nodes.size()<3){
+        if (nodes.size() < 3) {
             return false;
         }
         for (int i = 0; i < numNodes; i++) {
@@ -230,6 +232,9 @@ public class Region {
                     if (isInsideRegion(blockLocation)) {
                         Vector relativePosition = blockLocation.toVector().subtract(centerVector);
                         Material material = blockLocation.getBlock().getType();
+                        if (material == Material.AIR) {
+                            continue;
+                        }
                         building.addBlockData(relativePosition, material);
                     }
                 }
@@ -237,5 +242,33 @@ public class Region {
         }
 
         return building;
+    }
+
+    public long countBlockAmount() {
+        if (nodes.isEmpty()) {
+            return 0;
+        }
+        long sum = 0;
+        double minX = getMinX();
+        double maxX = getMaxX();
+        double minZ = getMinZ();
+        double maxZ = getMaxZ();
+
+        // 遍历区域内的所有方块
+        for (int x = (int) minX; x <= maxX; x++) {
+            for (int y = (int) minHeight; y <= maxHeight; y++) {
+                for (int z = (int) minZ; z <= maxZ; z++) {
+                    Location blockLocation = new Location(Bukkit.getWorld(world), x, y, z);
+                    if (isInsideRegion(blockLocation)) {
+                        Material material = blockLocation.getBlock().getType();
+                        if (material == Material.AIR) {
+                            continue;
+                        }
+                        sum++;
+                    }
+                }
+            }
+        }
+        return sum;
     }
 }

@@ -2,6 +2,9 @@ package cn.originmc.plugins.polygon.controller.flag;
 
 import cn.originmc.plugins.polygon.core.flag.NormalFlag;
 import cn.originmc.plugins.polygon.core.flag.NormalFlags;
+import cn.originmc.plugins.polygon.core.player.manager.TerritoryMemberManager;
+import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
+import cn.originmc.plugins.polygon.core.region.object.Territory;
 import cn.originmc.plugins.polygon.data.yaml.config.LangData;
 
 public class FlagsGenerator {
@@ -22,12 +25,15 @@ public class FlagsGenerator {
         NormalFlag flagMessage = new NormalFlag("message");
         flagMessage.addValue("join", LangData.getServerText("visitor-join-message", "&a你作为访客进入了领地 &b~"));
         flagMessage.addValue("leave", LangData.getServerText("visitor-leave-message", "&a你离开了领地 &b~"));
+        NormalFlag flagTp=new NormalFlag("tp");
+        flagTp.addValue("enable","false");
         normalFlags.addFlag(flagBreak);
         normalFlags.addFlag(flagPlace);
         normalFlags.addFlag(flagInteract);
         normalFlags.addFlag(flagDamage);
         normalFlags.addFlag(flagMove);
         normalFlags.addFlag(flagMessage);
+        normalFlags.addFlag(flagTp);
         return normalFlags;
     }
 
@@ -46,12 +52,15 @@ public class FlagsGenerator {
         NormalFlag flagMessage = new NormalFlag("message");
         flagMessage.addValue("join", LangData.getServerText("member-join-message", "&a欢迎回到 &b~"));
         flagMessage.addValue("leave", LangData.getServerText("member-leave-message", "&a一路顺风 &b~"));
+        NormalFlag flagTp=new NormalFlag("tp");
+        flagTp.addValue("enable","false");
         normalFlags.addFlag(flagBreak);
         normalFlags.addFlag(flagPlace);
         normalFlags.addFlag(flagInteract);
         normalFlags.addFlag(flagDamage);
         normalFlags.addFlag(flagMove);
         normalFlags.addFlag(flagMessage);
+        normalFlags.addFlag(flagTp);
         return normalFlags;
     }
 
@@ -78,5 +87,28 @@ public class FlagsGenerator {
         flags.addFlag(flag);
         return flags;
     }
-
+    public static String getGroup(TerritoryMember territoryMember){
+        NormalFlags flags = (NormalFlags) territoryMember.getFlags("default");
+        NormalFlag flag = (NormalFlag) flags.getFlag("group");
+        return flag.getValue("value");
+    }
+    public static NormalFlag getMemberFlag(Territory territory,String id,String flagName){
+        TerritoryMemberManager territoryMemberManager=territory.getTerritoryMemberManager();
+        TerritoryMember territoryMember=territoryMemberManager.getMember(id);
+        if (territoryMember==null){
+            return (NormalFlag) territory.getFlags("visitor").getFlag("tp");
+        }
+        NormalFlags flags = (NormalFlags) territoryMember.getFlags("default");
+        NormalFlag flag = (NormalFlag) flags.getFlag(flagName);
+        if (flag!=null){
+            return flag;
+        }
+        String group=getGroup(territoryMember);
+        if(territory.hasFlagsSpace(group)){
+            flags = (NormalFlags) territory.getFlags(group);
+            flag = (NormalFlag) flags.getFlag(flagName);
+            return flag;
+        }
+        return null;
+    }
 }
