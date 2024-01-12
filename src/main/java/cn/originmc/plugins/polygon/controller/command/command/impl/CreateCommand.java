@@ -37,7 +37,7 @@ public class CreateCommand implements SubCommand {
         Player player = (Player) sender;
         String id = args[0];
         if (Polygon.getTerritoryManager().hasTerritory(id)) {
-            Polygon.getSender().sendToSender(player, LangData.getPrefix() + LangData.getServerText("territory-id-exist", "&c领地ID已经存"));
+            Polygon.getSender().sendToSender(player, LangData.getPrefix() + LangData.getServerText("territory-id-exist", "&c领地ID已经存在"));
             return;
         }
         String display = id;

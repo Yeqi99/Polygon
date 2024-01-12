@@ -12,40 +12,47 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PolygonTabCompleter  implements TabCompleter {
+public class PolygonTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("reload", "help", "create", "info", "building", "place");
+            return Arrays.asList("reload", "help", "create", "remove", "flag", "info", "member", "tp");
         }
 
         // 对于特定子命令的进一步自动补全
         if (args.length == 2) {
             switch (args[0].toLowerCase()) {
-                case "create":
-                    // 为 "create" 提供领地名字的建议，这里需要根据实际情况填充或获取数据
-                    return Collections.singletonList("<领地ID>");
-                case "building":
-                    // 为 "building" 提供建筑名字的建议，这里需要根据实际情况填充或获取数据
-                    return new ArrayList<>(Polygon.getTerritoryManager().territoryMap.keySet());
-                case "place":
-                    // 为 "place" 提供建筑名字的建议，这里需要根据实际情况填充或获取数据
-                    return new ArrayList<>(Polygon.getBuildingManager().buildingMap.keySet());
-                // 可以根据需要为其他子命令添加更多的自动补全
-            }
-        }
-        if (args.length == 3) {
-            switch (args[0].toLowerCase()) {
-                case "create":
-                    // 为 "create" 提供领地名字的建议，这里需要根据实际情况填充或获取数据
-                    return Collections.singletonList("<领地显示名>");
-                case "building":
-                    // 为 "building" 提供建筑名字的建议，这里需要根据实际情况填充或获取数据
-                    return Collections.singletonList("<建筑名字>");
-            }
-        }
+                case "create": {
+                    return Collections.singletonList("<id> [displayName] [maxHeight] [minHeight]");
+                }
 
-        // 默认情况下返回空列表，表示没有可用的自动补全
+                case "remove": {
+                    return new ArrayList<>(Polygon.getTerritoryManager().territoryMap.keySet());
+                }
+
+                case "info": {
+                    return new ArrayList<>(Polygon.getTerritoryManager().territoryMap.keySet());
+                }
+
+                case "tp": {
+                    return new ArrayList<>(Polygon.getTerritoryManager().territoryMap.keySet());
+                }
+                case "member": {
+                    List<String> list = new ArrayList<>();
+                    list.add("add <ID> <name>");
+                    list.add("remove <ID> <name>");
+                    return list;
+                }
+                case "flag": {
+                    List<String> list = new ArrayList<>();
+                    list.add("add territory <id> <group> <flag> <key> <value>");
+                    list.add("add member <name> <id>  <flag> <key> <value>");
+                    list.add("remove territory <id> <group> <flag> [key]");
+                    list.add("remove member <name> <id> <flag> [key]");
+                    return list;
+                }
+            }
+        }
         return new ArrayList<>();
     }
 }

@@ -12,6 +12,7 @@ import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
 import cn.originmc.plugins.polygon.core.region.manager.TerritoryManager;
 import cn.originmc.plugins.polygon.core.region.object.Node;
 import cn.originmc.plugins.polygon.core.region.object.Territory;
+import cn.originmc.plugins.polygon.data.yaml.config.LangData;
 import cn.originmc.plugins.polygon.data.yaml.core.BuildingData;
 import cn.originmc.plugins.polygon.data.yaml.core.TerritoryData;
 import cn.originmc.plugins.polygon.utils.hook.PlaceholderAPIHook;
@@ -73,6 +74,7 @@ public final class Polygon extends JavaPlugin {
         BuildingData.load();
         buildingManager.loadBuildingFromYaml();
 
+        LangData.load();
         hook();
         registerListener();
         registerCommand();
