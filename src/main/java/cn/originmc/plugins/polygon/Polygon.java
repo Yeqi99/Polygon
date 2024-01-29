@@ -1,14 +1,10 @@
 package cn.originmc.plugins.polygon;
 
-<<<<<<< HEAD
+
 import cn.originmc.plugins.polygon.controller.command.FlagCommand;
-import cn.originmc.plugins.polygon.controller.command.PolygonCommand;
 import cn.originmc.plugins.polygon.controller.command.TerritoryCommand;
 import cn.originmc.plugins.polygon.controller.command.TerritoryTabCompleter;
-=======
-import cn.originmc.plugins.polygon.controller.command.PolygonCommand;
-import cn.originmc.plugins.polygon.controller.command.PolygonTabCompleter;
->>>>>>> 78d9eeb3b7ac1f2891a66ceb64e6fa124bf2db25
+
 import cn.originmc.plugins.polygon.controller.listener.PolygonSelectionListener;
 import cn.originmc.plugins.polygon.core.building.manager.BuildingManager;
 import cn.originmc.plugins.polygon.core.building.object.Building;
@@ -25,11 +21,7 @@ import cn.originmc.plugins.polygon.data.yaml.core.TerritoryData;
 import cn.originmc.plugins.polygon.utils.hook.PlaceholderAPIHook;
 import cn.originmc.plugins.polygon.utils.hook.ProtocolLibHook;
 import cn.originmc.plugins.polygon.utils.text.Sender;
-<<<<<<< HEAD
-=======
-import org.bukkit.Chunk;
-import org.bukkit.World;
->>>>>>> 78d9eeb3b7ac1f2891a66ceb64e6fa124bf2db25
+
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -100,16 +92,12 @@ public final class Polygon extends JavaPlugin {
     }
 
     public static void registerCommand() {
-        Objects.requireNonNull(instance.getCommand("Polygon")).setExecutor(new PolygonCommand());
-<<<<<<< HEAD
         Objects.requireNonNull(instance.getCommand("Territory")).setExecutor(new TerritoryCommand());
         Objects.requireNonNull(instance.getCommand("Flag")).setExecutor(new FlagCommand());
         Objects.requireNonNull(instance.getCommand("Territory")).setTabCompleter(new TerritoryTabCompleter(territoryManager));
 
 //        Objects.requireNonNull(instance.getCommand("Polygon")).setTabCompleter(new PolygonTabCompleter());
-=======
-        Objects.requireNonNull(instance.getCommand("Polygon")).setTabCompleter(new PolygonTabCompleter());
->>>>>>> 78d9eeb3b7ac1f2891a66ceb64e6fa124bf2db25
+
     }
 
     public static void saveDefaultRes() {
