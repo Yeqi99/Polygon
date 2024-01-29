@@ -42,10 +42,11 @@ public class TerritoryCommand implements CommandExecutor {
                 return handleShow(sender, args);
             case "tp":
                 return handleTp(sender, args);
-            case "setspawn":
-                return handleSetspawn(sender, args);
-            case "tobuilding":
-                return handleTobuilding(sender,args);
+                // TODO 待实现的指令
+//            case "setspawn":
+//                return handleSetspawn(sender, args);
+//            case "tobuilding":
+//                return handleTobuilding(sender,args);
             default:
                 s.sendToSender(sender, LangData.getList("unknown-command"));
                 return true;
