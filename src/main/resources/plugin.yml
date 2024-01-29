@@ -1,0 +1,32 @@
+name: Polygon
+version: '${project.version}'
+main: cn.originmc.plugins.polygon.Polygon
+api-version: '1.13'
+softdepend:
+  - PlaceholderAPI
+  - ProtocolLib
+commands:
+  Polygon:
+    aliases:
+      - p
+    description: Polygon command
+    executor: cn.originmc.plugins.polygon.commands.PolygonCommand
+    permission: polygon.command
+    permission-message: You do not have permission to use this command.
+    usage: /<command> [reload]
+  Territory:
+    aliases:
+      - t
+    description: Polygon territory command
+    executor: cn.originmc.plugins.polygon.commands.TerritoryCommand
+    permission: polygon.territory
+    permission-message: You do not have permission to use this command.
+    usage: /<command> [reload]
+  Flag:
+    aliases:
+      - f
+    description: Polygon flag command
+    executor: cn.originmc.plugins.polygon.commands.TerritoryCommand
+    permission: polygon.territory
+    permission-message: You do not have permission to use this command.
+    usage: /<command> [reload]
