@@ -34,4 +34,8 @@ amount: "&a数量"
 node: "&a节点"
 name: "&a名称"
 group: "&a组"
+<<<<<<< HEAD
 tp-success: "&a传送成功"
+=======
+tp-success: "&a传送成功"
+>>>>>>> 78d9eeb3b7ac1f2891a66ceb64e6fa124bf2db25
