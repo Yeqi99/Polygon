@@ -18,6 +18,10 @@ public class Node implements ConfigurationSerializable {
         this.x = x;
         this.z = z;
     }
+    public Node(Location location){
+        this.x = location.getX();
+        this.z = location.getZ();
+    }
 
     public Location getBukkitLocation(World world, double y) {
         return new Location(world, x, y, z);

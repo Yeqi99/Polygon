@@ -32,6 +32,8 @@ public class TerritoryTabCompleter implements TabCompleter {
             suggestions.add("remove");
             suggestions.add("show");
             suggestions.add("tp");
+            suggestions.add("setspawn");
+            suggestions.add("tobuilding");
         } else if (args.length == 2 && "remove".equalsIgnoreCase(args[0])) {
             suggestions.addAll(getExistingTerritoryIds());
         } else if (args.length == 2 && "show".equalsIgnoreCase(args[0])) {
@@ -40,10 +42,14 @@ public class TerritoryTabCompleter implements TabCompleter {
             suggestions.add("id");
         } else if (args.length == 2 && "tp".equalsIgnoreCase(args[0])) {
             suggestions.addAll(getExistingTerritoryIds());
+        } else if (args.length == 2 && "tobuilding".equalsIgnoreCase(args[0])) {
+            suggestions.addAll(getExistingTerritoryIds());
         } else if (args.length == 3 && "create".equalsIgnoreCase(args[0])) {
             for (World world : Bukkit.getWorlds()) {
                 suggestions.add(world.getName());
             }
+        } else if (args.length == 3 && "tobuilding".equalsIgnoreCase(args[0])) {
+            suggestions.add("id");
         } else if (args.length == 3 && "tp".equalsIgnoreCase(args[0])) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 suggestions.add(onlinePlayer.getName());

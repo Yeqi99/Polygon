@@ -60,7 +60,7 @@ public final class Polygon extends JavaPlugin {
     @Override
     public void onDisable() {
         territoryManager.saveTerritoryToYaml();
-        buildingManager.saveTerritoryToYaml();
+        buildingManager.saveBuildingToYaml();
     }
 
     public static void loadOrReload() {

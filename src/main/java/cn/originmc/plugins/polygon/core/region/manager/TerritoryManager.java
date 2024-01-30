@@ -38,7 +38,8 @@ public class TerritoryManager {
         }
         return false;
     }
-    public Territory getTerritory(Location location){
+
+    public Territory getTerritory(Location location) {
         for (Territory value : territoryMap.values()) {
             if (value.isInsideRegion(location) && value.isInHeight(location) && value.isInWorld(location)) {
                 return value;
@@ -46,14 +47,22 @@ public class TerritoryManager {
         }
         return null;
     }
-    public void loadTerritoryFromYaml(){
+
+    public void loadTerritoryFromYaml() {
         for (Territory territory : TerritoryData.getTerritoryList()) {
-            territoryMap.put(territory.getId(),territory);
+            territoryMap.put(territory.getId(), territory);
         }
     }
-    public void saveTerritoryToYaml(){
+
+    public void saveTerritoryToYaml() {
         for (Territory territory : territoryMap.values()) {
             TerritoryData.save(territory);
+        }
+    }
+
+    public void saveTerritoryToYaml(String id) {
+        if (territoryMap.containsKey(id)) {
+            TerritoryData.save(territoryMap.get(id));
         }
     }
 }

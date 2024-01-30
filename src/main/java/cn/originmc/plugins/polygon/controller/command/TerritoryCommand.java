@@ -3,6 +3,7 @@ package cn.originmc.plugins.polygon.controller.command;
 import cn.originmc.plugins.polygon.Polygon;
 import cn.originmc.plugins.polygon.controller.flag.FlagsGenerator;
 import cn.originmc.plugins.polygon.controller.listener.PolygonSelectionListener;
+import cn.originmc.plugins.polygon.core.building.object.Building;
 import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
 import cn.originmc.plugins.polygon.core.region.manager.TerritoryManager;
 import cn.originmc.plugins.polygon.core.region.object.Node;
@@ -23,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TerritoryCommand implements CommandExecutor {
-    private Sender s = new Sender(Polygon.getInstance());
-    private TerritoryManager territoryManager = Polygon.getTerritoryManager();
+    private final Sender s = new Sender(Polygon.getInstance());
+    private final TerritoryManager territoryManager = Polygon.getTerritoryManager();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -42,11 +43,10 @@ public class TerritoryCommand implements CommandExecutor {
                 return handleShow(sender, args);
             case "tp":
                 return handleTp(sender, args);
-                // TODO 待实现的指令
-//            case "setspawn":
-//                return handleSetspawn(sender, args);
-//            case "tobuilding":
-//                return handleTobuilding(sender,args);
+            case "setspawn":
+                return handleSetspawn(sender, args);
+            case "tobuilding":
+                return handleTobuilding(sender, args);
             default:
                 s.sendToSender(sender, LangData.getList("unknown-command"));
                 return true;
@@ -82,7 +82,7 @@ public class TerritoryCommand implements CommandExecutor {
         Territory territory = createTerritory(player, id, display, nodes, args);
         territoryManager.addTerritory(territory);
         s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("territory-create-success", "&a领地创建成功").replace("~", id));
-        territoryManager.saveTerritoryToYaml();
+        territoryManager.saveTerritoryToYaml(id);
         return true;
     }
 
@@ -189,7 +189,7 @@ public class TerritoryCommand implements CommandExecutor {
                 s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("territory-id-not-exist", "&c领地不存在"));
                 return true;
             }
-            player.teleport(territory.calculateCenter().getBukkitLocation(Bukkit.getWorld(territory.getWorld()), territory.getMaxHeight()));
+            player.teleport(territory.getSpawn());
 
             s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("teleport-success", "&a传送成功"));
 
@@ -214,10 +214,93 @@ public class TerritoryCommand implements CommandExecutor {
                 return true;
             }
 
-            player.teleport(territory.calculateCenter().getBukkitLocation(Bukkit.getWorld(territory.getWorld()), territory.getMaxHeight()));
+            player.teleport(territory.getSpawn());
             s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("teleport-success", "&a传送成功"));
 
         }
         return true;
+    }
+
+    public boolean handleSetspawn(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            Territory territory = territoryManager.getTerritory(player.getLocation());
+            if (territory == null) {
+                s.sendToSender(player, LangData.getPrefix() + LangData
+                        .getServerText("not-in-territory", "&c你不在领地内"));
+                return true;
+            }
+            if (!territory.hasMember(player.getUniqueId().toString())) {
+                s.sendToSender(player, LangData.getPrefix() + LangData
+                        .getServerText("no-permission", "&c你没有权限这样做"));
+                return true;
+            }
+            TerritoryMember territoryMember = (TerritoryMember) territory.getMember(player.getUniqueId().toString());
+            String group = FlagsGenerator.getGroup(territoryMember);
+            if (group.equalsIgnoreCase("owner") || group.equalsIgnoreCase("admin")) {
+                territory.setSpawn(player.getLocation());
+                TerritoryData.save(territory);
+                return true;
+            } else {
+                s.sendToSender(player, LangData.getPrefix() + LangData
+                        .getServerText("no-permission", "&c你没有权限这样做"));
+                return true;
+            }
+        }
+        return true;
+    }
+
+    public boolean handleTobuilding(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+
+            // 确保提供了足够的参数
+            if (args.length < 3) {
+                s.sendToSender(player, "&c用法: /territory tobuilding <territoryId> <buildingId>");
+                return true;
+            }
+
+            String id = args[1];
+            Territory territory = territoryManager.getTerritory(id);
+
+            // 确保领地存在
+            if (territory == null) {
+                s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("territory-id-not-exist", "&c领地不存在"));
+                return true;
+            }
+            String buildingId = args[2];
+            if (Polygon.getBuildingManager().buildingMap.containsKey(buildingId)) {
+                s.sendToSender(player, LangData.getPrefix() + LangData.getServerText("building-id-exist", "&c建筑已存在"));
+                return true;
+            }
+            Building building = territory.getBuilding(player.getLocation());
+            Polygon.getBuildingManager().addBuilding(buildingId, building);
+            Polygon.getBuildingManager().saveBuildingToYaml(buildingId);
+            return true;
+        } else {
+            // 确保提供了足够的参数
+            if (args.length < 3) {
+                s.sendToSender(sender, "&c用法: /territory tobuilding <territoryId> <buildingId>");
+                return true;
+            }
+
+            String id = args[1];
+            Territory territory = territoryManager.getTerritory(id);
+
+            // 确保领地存在
+            if (territory == null) {
+                s.sendToSender(sender, LangData.getPrefix() + LangData.getServerText("territory-id-not-exist", "&c领地不存在"));
+                return true;
+            }
+            String buildingId = args[2];
+            if (Polygon.getBuildingManager().buildingMap.containsKey(buildingId)) {
+                s.sendToSender(sender, LangData.getPrefix() + LangData.getServerText("building-id-exist", "&c建筑已存在"));
+                return true;
+            }
+            Building building = territory.getBuilding();
+            Polygon.getBuildingManager().addBuilding(buildingId, building);
+            Polygon.getBuildingManager().saveBuildingToYaml(buildingId);
+            return true;
+        }
     }
 }

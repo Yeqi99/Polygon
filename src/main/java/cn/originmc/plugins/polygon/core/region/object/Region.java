@@ -244,6 +244,45 @@ public class Region {
         return building;
     }
 
+    public Building getBuilding(Location relativeLocation) {
+        if (nodes.isEmpty()) {
+            return null;
+        }
+
+        Node centerNode = new Node(relativeLocation);
+        Vector centerVector = new Vector(centerNode.getX(), relativeLocation.getBlockY(), centerNode.getZ());
+
+        Building building = new Building(centerVector);
+
+        // 处理节点相对坐标
+        for (Node node : nodes) {
+            Vector relativePosition = new Vector(node.getX() - centerNode.getX(), maxHeight, node.getZ() - centerNode.getZ());
+            building.getRelativeNodes().add(relativePosition);
+        }
+        double minX = getMinX();
+        double maxX = getMaxX();
+        double minZ = getMinZ();
+        double maxZ = getMaxZ();
+        // 遍历区域内的所有方块
+        for (int x = (int) minX; x <= maxX; x++) {
+            for (int y = (int) minHeight; y <= maxHeight; y++) {
+                for (int z = (int) minZ; z <= maxZ; z++) {
+                    Location blockLocation = new Location(Bukkit.getWorld(world), x, y, z);
+                    if (isInsideRegion(blockLocation)) {
+                        Vector relativePosition = blockLocation.toVector().subtract(centerVector);
+                        Material material = blockLocation.getBlock().getType();
+                        if (material == Material.AIR) {
+                            continue;
+                        }
+                        building.addBlockData(relativePosition, material);
+                    }
+                }
+            }
+        }
+
+        return building;
+    }
+
     public long countBlockAmount() {
         if (nodes.isEmpty()) {
             return 0;

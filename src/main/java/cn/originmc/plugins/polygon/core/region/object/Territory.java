@@ -5,6 +5,8 @@ import cn.originmc.plugins.polygon.core.flag.FlagsMaster;
 import cn.originmc.plugins.polygon.core.player.manager.TerritoryMemberManager;
 import cn.originmc.plugins.polygon.core.player.object.RegionMember;
 import cn.originmc.plugins.polygon.core.player.object.TerritoryMember;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Territory extends Region implements PlayerRegion, MemberRegion, FlagsMaster, ConfigurationSerializable {
     private String id;
     private String display;
+    private Location spawn;
     private Map<String, Flags> flagsMap = new ConcurrentHashMap<>();
     private TerritoryMemberManager territoryMemberManager = new TerritoryMemberManager();
 
@@ -121,6 +124,7 @@ public class Territory extends Region implements PlayerRegion, MemberRegion, Fla
         result.put("nodes", getNodes());
         result.put("flagsMap", this.flagsMap);
         result.put("territoryMemberManager", territoryMemberManager);
+        result.put("spawn", getSpawn());
         return result;
     }
 
@@ -134,6 +138,18 @@ public class Territory extends Region implements PlayerRegion, MemberRegion, Fla
         territory.setTerritoryMemberManager((TerritoryMemberManager) map.get("territoryMemberManager"));
         territory.addNodes((List<Node>) map.get("nodes"));
         territory.setFlagsMap((Map<String, Flags>) map.get("flagsMap"));
+        territory.setSpawn((Location) map.get("spawn"));
         return territory;
+    }
+
+    public Location getSpawn() {
+        if (spawn==null){
+            return calculateCenter().getBukkitLocation(Bukkit.getWorld(getWorld()),getMaxHeight());
+        }
+        return spawn;
+    }
+
+    public void setSpawn(Location spawn) {
+        this.spawn = spawn;
     }
 }

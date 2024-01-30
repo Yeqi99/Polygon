@@ -44,9 +44,14 @@ public class BuildingManager {
     public void loadBuildingFromYaml(){
         setBuildingMap(BuildingData.getBuildingMap());
     }
-    public void saveTerritoryToYaml(){
+    public void saveBuildingToYaml(){
         for (Map.Entry<String, Building> entry : buildingMap.entrySet()) {
             BuildingData.save(entry.getKey(),entry.getValue());
+        }
+    }
+    public void saveBuildingToYaml(String id){
+        if (buildingMap.containsKey(id)){
+            BuildingData.save(id,buildingMap.get(id));
         }
     }
 
