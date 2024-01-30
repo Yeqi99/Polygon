@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public class TerritoryCommand implements CommandExecutor {
     private final Sender s = new Sender(Polygon.getInstance());
@@ -47,6 +48,10 @@ public class TerritoryCommand implements CommandExecutor {
                 return handleSetspawn(sender, args);
             case "tobuilding":
                 return handleTobuilding(sender, args);
+            case "me":
+                return handleMe(sender, args);
+            case "info":
+                return handleInfo(sender, args);
             default:
                 s.sendToSender(sender, LangData.getList("unknown-command"));
                 return true;
@@ -302,5 +307,52 @@ public class TerritoryCommand implements CommandExecutor {
             Polygon.getBuildingManager().saveBuildingToYaml(buildingId);
             return true;
         }
+    }
+
+    public boolean handleMe(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            for (Territory value : Polygon.getTerritoryManager().territoryMap.values()) {
+                if (!value.getTerritoryMemberManager().hasMember(player.getUniqueId().toString())) {
+                    continue;
+                }
+                TerritoryMember territoryMember = value.getTerritoryMemberManager().getMember(player.getUniqueId().toString());
+                String group = FlagsGenerator.getGroup(territoryMember);
+
+                Polygon.getSender().sendToPlayer(player, "&c" + value.getId() + ":" + value.getDisplay() + "&c(" + group + ")");
+            }
+        }
+        return true;
+    }
+
+    public boolean handleInfo(CommandSender sender, String[] args) {
+        String id = args[1];
+        Territory territory = Polygon.getTerritoryManager().getTerritory(id);
+        if (territory == null) {
+            Polygon.getSender().sendToSender(sender, LangData.getPrefix() + LangData.getServerText("territory-id-not-exist", "&c领地不存在"));
+            return true;
+        }
+        Polygon.getSender().sendToSender(sender, LangData.getPrefix() +
+                LangData.getServerText("territory-info", "&a领地信息").replace("~", territory.getId()));
+        String territoryLang = LangData.getServerText("territory", "&a领土");
+        String nameLang = LangData.getServerText("name", "&a名字");
+        String maxLang = LangData.getServerText("max", "&a最大");
+        String minLang = LangData.getServerText("min", "&a最小");
+        String memberLang = LangData.getServerText("member", "&a成员");
+        String nodeLang = LangData.getServerText("node", "&a节点");
+        String amountLang = LangData.getServerText("amount", "&a数量");
+        String heightLang = LangData.getServerText("height", "&a高度");
+        String groupLang = LangData.getServerText("group", "&a组");
+        Polygon.getSender().sendToSender(sender, territoryLang + nameLang + ":" + territory.getDisplay());
+        Polygon.getSender().sendToSender(sender, "ID:" + territory.getId());
+        Polygon.getSender().sendToSender(sender, maxLang + heightLang + ":" + territory.getMaxHeight());
+        Polygon.getSender().sendToSender(sender, minLang + heightLang + ":" + territory.getMinHeight());
+        Polygon.getSender().sendToSender(sender, territoryLang + memberLang + amountLang + ":" + territory.getTerritoryMemberManager().territoryMap.size());
+        for (Map.Entry<String, TerritoryMember> stringTerritoryMemberEntry : territory.getTerritoryMemberManager().territoryMap.entrySet()) {
+            Polygon.getSender().sendToSender(sender, territoryLang + memberLang + ":" + stringTerritoryMemberEntry.getValue().getPlayer().getName());
+            Polygon.getSender().sendToSender(sender, territoryLang + groupLang + ":" + FlagsGenerator.getGroup(stringTerritoryMemberEntry.getValue()));
+        }
+        Polygon.getSender().sendToSender(sender, territoryLang + nodeLang + amountLang + ":" + territory.getNodes().size());
+        return true;
     }
 }

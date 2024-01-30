@@ -1,5 +1,6 @@
 package cn.originmc.plugins.polygon.controller.command;
 
+import cn.originmc.plugins.polygon.Polygon;
 import cn.originmc.plugins.polygon.core.region.manager.TerritoryManager;
 import cn.originmc.plugins.polygon.core.region.object.Territory;
 import org.bukkit.Bukkit;
@@ -16,11 +17,7 @@ import java.util.List;
 
 public class TerritoryTabCompleter implements TabCompleter {
 
-    private final TerritoryManager territoryManager;
-
-    public TerritoryTabCompleter(TerritoryManager territoryManager) {
-        this.territoryManager = territoryManager;
-    }
+    private final TerritoryManager territoryManager= Polygon.getTerritoryManager();
 
     @Nullable
     @Override
@@ -34,9 +31,13 @@ public class TerritoryTabCompleter implements TabCompleter {
             suggestions.add("tp");
             suggestions.add("setspawn");
             suggestions.add("tobuilding");
+            suggestions.add("me");
+            suggestions.add("info");
         } else if (args.length == 2 && "remove".equalsIgnoreCase(args[0])) {
             suggestions.addAll(getExistingTerritoryIds());
         } else if (args.length == 2 && "show".equalsIgnoreCase(args[0])) {
+            suggestions.addAll(getExistingTerritoryIds());
+        } else if (args.length == 2 && "info".equalsIgnoreCase(args[0])) {
             suggestions.addAll(getExistingTerritoryIds());
         } else if (args.length == 2 && "create".equalsIgnoreCase(args[0])) {
             suggestions.add("id");
