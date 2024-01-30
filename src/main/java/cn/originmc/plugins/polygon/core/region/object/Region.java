@@ -22,6 +22,11 @@ public class Region {
         this.world = world;
         this.maxHeight = maxHeight;
         this.minHeight = minHeight;
+        if (this.maxHeight<this.minHeight){
+            double temp = this.minHeight;
+            this.minHeight=this.maxHeight;
+            this.maxHeight=temp;
+        }
     }
 
     public boolean isInWorld(Location location) {

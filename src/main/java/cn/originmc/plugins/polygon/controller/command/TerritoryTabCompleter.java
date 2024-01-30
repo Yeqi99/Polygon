@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TerritoryTabCompleter implements TabCompleter {
 
-    private final TerritoryManager territoryManager= Polygon.getTerritoryManager();
+    private final TerritoryManager territoryManager = Polygon.getTerritoryManager();
 
     @Nullable
     @Override
@@ -46,9 +46,7 @@ public class TerritoryTabCompleter implements TabCompleter {
         } else if (args.length == 2 && "tobuilding".equalsIgnoreCase(args[0])) {
             suggestions.addAll(getExistingTerritoryIds());
         } else if (args.length == 3 && "create".equalsIgnoreCase(args[0])) {
-            for (World world : Bukkit.getWorlds()) {
-                suggestions.add(world.getName());
-            }
+            suggestions.add("[display]");
         } else if (args.length == 3 && "tobuilding".equalsIgnoreCase(args[0])) {
             suggestions.add("id");
         } else if (args.length == 3 && "tp".equalsIgnoreCase(args[0])) {

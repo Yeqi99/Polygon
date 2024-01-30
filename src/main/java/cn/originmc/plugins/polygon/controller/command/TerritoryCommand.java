@@ -344,12 +344,14 @@ public class TerritoryCommand implements CommandExecutor {
         String heightLang = LangData.getServerText("height", "&a高度");
         String groupLang = LangData.getServerText("group", "&a组");
         Polygon.getSender().sendToSender(sender, territoryLang + nameLang + ":" + territory.getDisplay());
-        Polygon.getSender().sendToSender(sender, "ID:" + territory.getId());
+        Polygon.getSender().sendToSender(sender, "&aID:" + territory.getId());
         Polygon.getSender().sendToSender(sender, maxLang + heightLang + ":" + territory.getMaxHeight());
         Polygon.getSender().sendToSender(sender, minLang + heightLang + ":" + territory.getMinHeight());
         Polygon.getSender().sendToSender(sender, territoryLang + memberLang + amountLang + ":" + territory.getTerritoryMemberManager().territoryMap.size());
         for (Map.Entry<String, TerritoryMember> stringTerritoryMemberEntry : territory.getTerritoryMemberManager().territoryMap.entrySet()) {
-            Polygon.getSender().sendToSender(sender, territoryLang + memberLang + ":" + stringTerritoryMemberEntry.getValue().getPlayer().getName());
+            TerritoryMember territoryMember=stringTerritoryMemberEntry.getValue();
+            Player player=territoryMember.getPlayer();
+            Polygon.getSender().sendToSender(sender, territoryLang + memberLang + ":" + player.getName());
             Polygon.getSender().sendToSender(sender, territoryLang + groupLang + ":" + FlagsGenerator.getGroup(stringTerritoryMemberEntry.getValue()));
         }
         Polygon.getSender().sendToSender(sender, territoryLang + nodeLang + amountLang + ":" + territory.getNodes().size());

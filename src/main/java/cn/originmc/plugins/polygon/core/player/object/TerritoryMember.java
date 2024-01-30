@@ -9,9 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TerritoryMember implements RegionMember, FlagsMaster,ConfigurationSerializable {
+public class TerritoryMember implements RegionMember, FlagsMaster, ConfigurationSerializable {
     private final String id;
     private Map<String, Flags> flagsMap = new ConcurrentHashMap<>();
 
@@ -46,7 +47,10 @@ public class TerritoryMember implements RegionMember, FlagsMaster,ConfigurationS
 
     @Override
     public Player getPlayer() {
-        return Bukkit.getPlayer(this.id);
+        if (Bukkit.getPlayer(UUID.fromString(this.id)) == null) {
+            return null;
+        }
+        return Bukkit.getPlayer(UUID.fromString(this.id));
     }
 
     public Map<String, Flags> getFlagsMap() {
@@ -61,14 +65,14 @@ public class TerritoryMember implements RegionMember, FlagsMaster,ConfigurationS
     @Override
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> result = new HashMap<>();
-        result.put("id",this.id);
-        result.put("flagsMap",flagsMap);
+        result.put("id", this.id);
+        result.put("flagsMap", flagsMap);
         return result;
     }
 
     public static TerritoryMember deserialize(Map<String, Object> map) {
-        String id =(String) map.get("id");
-        TerritoryMember territoryMember=new TerritoryMember(id);
+        String id = (String) map.get("id");
+        TerritoryMember territoryMember = new TerritoryMember(id);
         territoryMember.setFlagsMap((Map<String, Flags>) map.get("flagsMap"));
         return territoryMember;
     }
