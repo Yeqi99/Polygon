@@ -1,2 +1,7 @@
 place-delay: 1 # When block place, delay n tick
 lang: English
+# 没有领土时变量显示的显示名
+default-territory-display: "&a荒野"
+# papi变量的世界名映射
+world-mapping:
+  world: "&a主世界"

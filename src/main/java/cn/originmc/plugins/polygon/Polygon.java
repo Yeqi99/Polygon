@@ -18,6 +18,7 @@ import cn.originmc.plugins.polygon.data.yaml.core.BuildingData;
 import cn.originmc.plugins.polygon.data.yaml.core.TerritoryData;
 import cn.originmc.plugins.polygon.utils.hook.PlaceholderAPIHook;
 import cn.originmc.plugins.polygon.utils.hook.ProtocolLibHook;
+import cn.originmc.plugins.polygon.utils.hook.placeholderapi.PolygonExpansion;
 import cn.originmc.plugins.polygon.utils.text.Sender;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -78,6 +79,8 @@ public final class Polygon extends JavaPlugin {
         hook();
         registerListener();
         registerCommand();
+
+        new PolygonExpansion().register();
     }
 
     public static void hook() {
