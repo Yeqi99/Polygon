@@ -30,10 +30,18 @@ public class FlagCommand implements CommandExecutor {
                 s.sendToSender(sender, LangData.getList("unknown-command"));
                 return true;
         }
-        return true;
     }
 
     public boolean handleAddMember(CommandSender sender, String[] args){
+
+    }
+    public boolean handleRemoveMember(CommandSender sender, String[] args){
+
+    }
+    public boolean handleAddTerritory(CommandSender sender, String[] args){
+
+    }
+    public boolean handleRemoveTerritory(CommandSender sender, String[] args){
 
     }
 }
