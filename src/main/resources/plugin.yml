@@ -16,7 +16,7 @@ commands:
     usage: /<command> [reload]
   Territory:
     aliases:
-      - t
+      - pt
     description: Polygon territory command
     executor: cn.originmc.plugins.polygon.commands.TerritoryCommand
     permission: polygon.territory
@@ -24,17 +24,25 @@ commands:
     usage: /<command> [reload]
   Flag:
     aliases:
-      - f
+      - pf
     description: Polygon flag command
-    executor: cn.originmc.plugins.polygon.commands.TerritoryCommand
-    permission: polygon.territory
+    executor: cn.originmc.plugins.polygon.commands.FlagCommand
+    permission: polygon.flag
     permission-message: You do not have permission to use this command.
     usage: /<command> [reload]
   Building:
     aliases:
-      - b
-    description: Polygon flag command
-    executor: cn.originmc.plugins.polygon.commands.TerritoryCommand
-    permission: polygon.territory
+      - pb
+    description: Polygon Building command
+    executor: cn.originmc.plugins.polygon.commands.BuildingCommand
+    permission: polygon.building
+    permission-message: You do not have permission to use this command.
+    usage: /<command> [reload]
+  Member:
+    aliases:
+      - pm
+    description: Polygon Member command
+    executor: cn.originmc.plugins.polygon.commands.MemberCommand
+    permission: polygon.member
     permission-message: You do not have permission to use this command.
     usage: /<command> [reload]

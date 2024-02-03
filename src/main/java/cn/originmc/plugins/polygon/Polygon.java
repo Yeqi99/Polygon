@@ -97,10 +97,12 @@ public final class Polygon extends JavaPlugin {
         Objects.requireNonNull(instance.getCommand("Flag")).setExecutor(new FlagCommand());
         Objects.requireNonNull(instance.getCommand("Building")).setExecutor(new BuildingCommand());
         Objects.requireNonNull(instance.getCommand("Polygon")).setExecutor(new PolygonCommand());
+        Objects.requireNonNull(instance.getCommand("Member")).setExecutor(new MemberCommand());
         Objects.requireNonNull(instance.getCommand("Territory")).setTabCompleter(new TerritoryTabCompleter());
         Objects.requireNonNull(instance.getCommand("Flag")).setTabCompleter(new FlagTabCompleter());
         Objects.requireNonNull(instance.getCommand("Building")).setTabCompleter(new BuildingTabCompleter());
         Objects.requireNonNull(instance.getCommand("Polygon")).setTabCompleter(new PolygonTabCompleter());
+        Objects.requireNonNull(instance.getCommand("Member")).setTabCompleter(new MemberTabCompleter());
 
     }
 

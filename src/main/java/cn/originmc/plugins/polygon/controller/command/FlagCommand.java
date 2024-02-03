@@ -8,14 +8,32 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+// TODO 待实现
 public class FlagCommand implements CommandExecutor {
-    Sender sender = new Sender(Polygon.getInstance());
+    Sender s = new Sender(Polygon.getInstance());
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String string, @NotNull String[] args) {
         if (args.length == 0) {
-            sender.sendToSender(commandSender, LangData.getList("help"));
+            s.sendToSender(sender, LangData.getList("help"));
             return true;
         }
+        switch (args[0].toLowerCase()) {
+            case "addmember":
+                return handleAddMember(sender, args);
+            case "addterritory":
+                return handleAddTerritory(sender, args);
+            case "removemember":
+                return handleRemoveMember(sender, args);
+            case "removeterritory":
+                return handleRemoveTerritory(sender, args);
+            default:
+                s.sendToSender(sender, LangData.getList("unknown-command"));
+                return true;
+        }
         return true;
+    }
+
+    public boolean handleAddMember(CommandSender sender, String[] args){
+
     }
 }
