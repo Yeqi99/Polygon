@@ -1,4 +1,5 @@
 place-delay: 1 # When block place, delay n tick
+select-action-delay: 1000
 lang: English
 # 没有领土时变量显示的显示名
 default-territory-display: "&a荒野"

@@ -19,10 +19,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PolygonSelectionListener implements Listener {
     public static Map<Player, List<Node>> selectionMap = new ConcurrentHashMap<>();
+    public static Map<Player, Long> cooldown = new ConcurrentHashMap<>();
 
     @EventHandler
     public void onSelection(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        long currentTime = System.currentTimeMillis();
+        if (cooldown.containsKey(player)) {
+            long lastTime = cooldown.get(player);
+            // 如果当前时间与最后操作时间的差小于1000毫秒，就返回
+            if (currentTime - lastTime < Polygon.getInstance().getConfig().getLong("select-action-delay", 1000)) {
+                return;
+            }
+        }
+        cooldown.put(player, currentTime);
         if (player.getInventory().getItemInMainHand().getType() != Material.GOLDEN_SHOVEL) {
             return;
         }
@@ -39,7 +49,7 @@ public class PolygonSelectionListener implements Listener {
             if (selectionMap.containsKey(player)) {
                 List<Node> nodeList = selectionMap.get(player);
                 for (Node node1 : nodeList) {
-                    if (node1.getX()==node.getX() && node1.getZ()==node.getZ()){
+                    if (node1.getX() == node.getX() && node1.getZ() == node.getZ()) {
                         Polygon.getSender().sendToPlayer(player, "这里已经选择过了");
                         event.setCancelled(true);
                         return;
@@ -57,7 +67,7 @@ public class PolygonSelectionListener implements Listener {
             }
             event.setCancelled(true);
         } else {
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (selectionMap.containsKey(player)) {
                     Block block = event.getClickedBlock();
                     Node node = new Node(block.getX(), block.getZ());
@@ -65,7 +75,7 @@ public class PolygonSelectionListener implements Listener {
                     List<Node> nodeList = selectionMap.get(player);
                     List<Node> result = new ArrayList<>();
                     for (Node node1 : nodeList) {
-                        if (node1.getX()==node.getX() && node1.getZ()==node.getZ()){
+                        if (node1.getX() == node.getX() && node1.getZ() == node.getZ()) {
                             Polygon.getSender().sendToPlayer(player, "&a已经取消这个点");
                             continue;
                         }
